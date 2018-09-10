@@ -10,8 +10,6 @@
 
 #include "board.h"
 
-/* ------ Macros ------ */
-
 #define NO_OP_REG                   0x00
 #define DECODE_MODE_REG             0x09
 #define INTENSITY_REG               0x0A
@@ -22,12 +20,17 @@
 
 #define MAX7219_FRAME(ADDR, DATA)   ((uint16_t) (((ADDR) << 8) | (DATA)))
 
-/* ---- End Macros ---- */
+typedef struct {
+    LPC_SSP_T *ssp;         /* Pointer to used SSP. MUST be pre-configured */
+    uint8_t *SSELPin;       /* SSEL pin used for latching data in MAX7219's. MUST be pre-configured as GPIO output pin */
+    uint8_t numOfMatrices;  /* Number of MAX7219 matrices used */
+} MAX7219Config;
 
-/* ------ Private variables and functions ------ */
-/* ---- End private variables end functions ---- */
-
-/* ------ Public variables and functions ------ */
-/* ---- End public variables end functions ---- */
+/*
+ * @brief Initialize MAX7219 configuration
+ * @param cfg : Configuration struct
+ * @return Nothing
+ */
+void MAX7219Configure(MAX7219Config cfg);
 
 #endif /* MAX7219_H_ */
