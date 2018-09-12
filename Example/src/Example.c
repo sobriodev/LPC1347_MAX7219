@@ -1,48 +1,50 @@
 /*
-===============================================================================
- Name        : Example.c
- Author      : $(author)
- Version     :
- Copyright   : $(copyright)
- Description : main definition
-===============================================================================
-*/
+ * Example.c
+ *
+ *  Created on: 8 Sep 2018
+ *      Author: sobriodev
+ */
 
-#if defined (__USE_LPCOPEN)
-#if defined(NO_BOARD_LIB)
-#include "chip.h"
-#else
 #include "board.h"
-#endif
-#endif
-
+#include "max7219.h"
 #include <cr_section_macros.h>
 
-// TODO: insert other include files here
-
-// TODO: insert other definitions and declarations here
+#define SCK_PORT    1
+#define SCK_PIN     15
+#define MOSI_PORT   0
+#define MOSI_PIN    21
+#define MISO_PORT   0
+#define MISO_PIN    22
+#define SSEL_PORT   1
+#define SSEL_PIN    19
 
 int main(void) {
-
-#if defined (__USE_LPCOPEN)
-    // Read clock settings and update SystemCoreClock variable
+    /* Generic initialization */
     SystemCoreClockUpdate();
-#if !defined(NO_BOARD_LIB)
-    // Set up and initialize all required blocks and
-    // functions related to the board hardware
     Board_Init();
-    // Set the LED to the state of "On"
-    Board_LED_Set(0, true);
-#endif
-#endif
 
-    // TODO: insert code here
+    LPC_IOCON->PIO1[SCK_PIN] = 0x3;
+    LPC_IOCON->PIO0[MOSI_PIN] = 0x2;
+    LPC_IOCON->PIO0[MISO_PIN] = 0x3;
+    LPC_IOCON->PIO1[SSEL_PIN] = 0x0;
+    LPC_GPIO_PORT->DIR[SSEL_PORT] |= 1 << SSEL_PIN;
+    LPC_GPIO_PORT->B[SSEL_PORT][SSEL_PIN] = 1;
 
-    // Force the counter to be placed into memory
-    volatile static int i = 0 ;
-    // Enter an infinite loop, just incrementing a counter
-    while(1) {
-        i++ ;
-    }
-    return 0 ;
+    LPC_SYSCTL->SYSAHBCLKCTRL |= 1 << 18;
+
+    LPC_SYSCTL->SSP1CLKDIV = 1;
+
+    LPC_SYSCTL->PRESETCTRL |= 1 << 2;
+
+    LPC_SSP1->CR0 = (LPC_SSP1->CR0 & ~0xF) | 0xF;
+    LPC_SSP1->CR0 &= ~(0x3 << 4);
+    LPC_SSP1->CR0 &= ~(1 << 6 | 1 << 7);
+    LPC_SSP1->CR0 &= ~(0xF << 8);
+
+    LPC_SSP1->CR1 &= ~(1 << 2);
+    LPC_SSP1->CPSR = 8;
+    LPC_SSP1->CR1 |= 1 << 1;
+
+    while(1);
+    return 0;
 }
