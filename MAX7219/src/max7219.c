@@ -27,4 +27,19 @@ static MAX7219Config config;
 
 void MAX7219Configure(MAX7219Config cfg) {
     config = cfg;
+    if (config.numOfMatrices > 8) { config.numOfMatrices = 8; }
 }
+
+void sendToAll(uint16_t frame) {
+    while (config.ssp->SR << 4); /* Wait until the SPI controller is idle */
+    *(config.ssel) = 0;
+    for (int8_t i = 0; i < config.numOfMatrices; ++i) {
+        config.ssp->DR = frame;
+    }
+    while (config.ssp->SR << 4); /* Wait until the SPI controller is idle */
+    *(config.ssel) = 1;
+}
+
+void sendToOne(uint8_t offset, uint16_t frame) {}
+
+void sendConfigurationFrames(void) {}
