@@ -11,7 +11,7 @@
  * Private types/enumerations/variables
  ****************************************************************************/
 
-static MAX7219Config config;
+STATIC MAX7219Config config;
 
 /*****************************************************************************
  * Public types/enumerations/variables
@@ -20,6 +20,15 @@ static MAX7219Config config;
 /*****************************************************************************
  * Private functions
  ****************************************************************************/
+
+/**
+ * @brief Send SPI frame
+ * @param frame : Frame to send
+ */
+STATIC void SPISendFrame(uint16_t frame) {
+    while (!(config.ssp->SR & (1 << 1))); /* Wait until transmit FIFO is not full */
+    config.ssp->DR = frame;
+}
 
 /*****************************************************************************
  * Public functions
@@ -31,12 +40,12 @@ void MAX7219Configure(MAX7219Config cfg) {
 }
 
 void sendToAll(uint16_t frame) {
-    while ((config.ssp->SR & (1 << 4))); /* Wait until the SPI controller is idle */
+    while (config.ssp->SR & (1 << 4)); /* Wait until the SPI controller is idle */
     *(config.ssel) = LOW;
     for (int8_t i = 0; i < config.numOfMatrices; ++i) {
-        config.ssp->DR = frame;
+        SPISendFrame(frame);
     }
-    while ((config.ssp->SR & (1 << 4))); /* Wait until the SPI controller is idle */
+    while (config.ssp->SR & (1 << 4)); /* Wait until the SPI controller is idle */
     *(config.ssel) = HIGH;
 }
 
