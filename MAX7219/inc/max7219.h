@@ -21,6 +21,9 @@
 
 #define MATRIX_OFFSET(COL)          ((COL) / 8)
 
+#define HIGH                        1
+#define LOW                         0
+
 typedef struct {
     LPC_SSP_T *ssp;         /* Pointer to used SSP. MUST be pre-configured */
     __IO uint8_t *ssel;     /* SSEL pin used for latching data in MAX7219's. MUST be pre-configured as GPIO output pin */
