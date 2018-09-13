@@ -42,8 +42,12 @@ int main(void) {
     LPC_SSP1->CR0 &= ~(0xF << 8);
 
     LPC_SSP1->CR1 &= ~(1 << 2);
-    LPC_SSP1->CPSR = 8;
+    LPC_SSP1->CPSR = 254;
     LPC_SSP1->CR1 |= 1 << 1;
+
+    MAX7219Config config = {LPC_SSP1, &(LPC_GPIO_PORT->B[1][19]), 8};
+    MAX7219Configure(config);
+    sendToAll(10);
 
     while(1);
     return 0;

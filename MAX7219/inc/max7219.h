@@ -23,7 +23,7 @@
 
 typedef struct {
     LPC_SSP_T *ssp;         /* Pointer to used SSP. MUST be pre-configured */
-    uint8_t *ssel;          /* SSEL pin used for latching data in MAX7219's. MUST be pre-configured as GPIO output pin */
+    __IO uint8_t *ssel;     /* SSEL pin used for latching data in MAX7219's. MUST be pre-configured as GPIO output pin */
     uint8_t numOfMatrices;  /* Number of MAX7219 matrices used */
 } MAX7219Config;
 
