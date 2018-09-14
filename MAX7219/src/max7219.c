@@ -67,6 +67,9 @@ STATIC void sendFrame(uint8_t realFrames, uint8_t noOpFrames, uint16_t frame) {
 void MAX7219Configure(MAX7219Config cfg) {
     config = cfg;
     *(config.ssel) = HIGH;
+    sendToAll(MAX7219_FRAME(DECODE_MODE_REG, 0x00));
+    sendToAll(MAX7219_FRAME(SCAN_LIMIT_REG, 0x07));
+    sendToAll(MAX7219_FRAME(DISPLAY_TEST_REG, 0x00));
 }
 
 void sendToAll(uint16_t frame) {
@@ -77,4 +80,6 @@ void sendToOne(uint8_t offset, uint16_t frame) {
     sendFrame(1, offset, frame);
 }
 
-void sendConfigurationFrames(void) {}
+void setColumnLEDs(uint8_t col, uint8_t data) {
+    sendToOne(MATRIX_OFFSET(col), MAX7219_FRAME(DIGIT_REG(REAL_COLUMN(col)), data));
+}

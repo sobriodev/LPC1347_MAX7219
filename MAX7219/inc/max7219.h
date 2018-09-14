@@ -20,6 +20,7 @@
 #define MAX7219_FRAME(ADDR, DATA)   ((uint16_t) (((ADDR) << 8) | (DATA)))
 
 #define MATRIX_OFFSET(COL)          ((COL) / 8)
+#define REAL_COLUMN(COL)            ((COL) % 8)
 
 #define HIGH                        1
 #define LOW                         0
@@ -52,9 +53,6 @@ void sendToAll(uint16_t frame);
  */
 void sendToOne(uint8_t offset, uint16_t frame);
 
-/**
- * @brief Send configuration frames to all matrices
- */
-void sendConfigurationFrames(void);
+void setColumnLEDs(uint8_t col, uint8_t data);
 
 #endif /* MAX7219_H_ */
