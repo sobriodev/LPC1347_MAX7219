@@ -47,7 +47,10 @@ int main(void) {
 
     MAX7219Config config = {LPC_SSP1, &(LPC_GPIO_PORT->B[1][19]), 8};
     MAX7219Configure(config);
-    sendToAll(10);
+
+    for (int8_t i = 0; i < 8; ++i) {
+        sendToOne(i, i * 100);
+    }
 
     while(1);
     return 0;

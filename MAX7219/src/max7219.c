@@ -22,12 +22,42 @@ STATIC MAX7219Config config;
  ****************************************************************************/
 
 /**
+ * @brief Wait until transmit FIFO is not full
+ * @return Nothing
+ */
+STATIC INLINE void TFEWait(void) {
+    while (!(config.ssp->SR & (1 << 1)));
+}
+
+/**
+ * @brief Wait until the SPI controller is idle
+ * @return Nothing
+ */
+STATIC INLINE void BSYWait(void) {
+    while (config.ssp->SR & (1 << 4));
+}
+
+/**
  * @brief Send SPI frame
  * @param frame : Frame to send
+ * @return Nothing
  */
 STATIC void SPISendFrame(uint16_t frame) {
-    while (!(config.ssp->SR & (1 << 1))); /* Wait until transmit FIFO is not full */
+    TFEWait();
     config.ssp->DR = frame;
+}
+
+STATIC void sendFrame(uint8_t realFrames, uint8_t noOpFrames, uint16_t frame) {
+    BSYWait();
+    *(config.ssel) = LOW;
+    for (int8_t i = 0; i < realFrames; ++i) {
+        SPISendFrame(frame);
+    }
+    for (int8_t i = 0; i < noOpFrames; ++i) {
+        SPISendFrame(MAX7219_FRAME(NO_OP_REG, 0x00));
+    }
+    BSYWait();
+    *(config.ssel) = HIGH;
 }
 
 /*****************************************************************************
@@ -40,15 +70,11 @@ void MAX7219Configure(MAX7219Config cfg) {
 }
 
 void sendToAll(uint16_t frame) {
-    while (config.ssp->SR & (1 << 4)); /* Wait until the SPI controller is idle */
-    *(config.ssel) = LOW;
-    for (int8_t i = 0; i < config.numOfMatrices; ++i) {
-        SPISendFrame(frame);
-    }
-    while (config.ssp->SR & (1 << 4)); /* Wait until the SPI controller is idle */
-    *(config.ssel) = HIGH;
+    sendFrame(config.numOfMatrices, 0, frame);
 }
 
-void sendToOne(uint8_t offset, uint16_t frame) {}
+void sendToOne(uint8_t offset, uint16_t frame) {
+    sendFrame(1, offset, frame);
+}
 
 void sendConfigurationFrames(void) {}

@@ -46,7 +46,8 @@ void sendToAll(uint16_t frame);
 
 /**
  * @brief Send frame to particular matrix
- * @param frame : Frame to send
+ * @param offset : Matrix offset
+ * @param frame  : Frame to send
  * @return Nothing
  */
 void sendToOne(uint8_t offset, uint16_t frame);
