@@ -47,19 +47,6 @@ STATIC void SPISendFrame(uint16_t frame) {
     config.ssp->DR = frame;
 }
 
-STATIC void sendFrame(uint8_t realFrames, uint8_t noOpFrames, uint16_t frame) {
-    BSYWait();
-    *(config.ssel) = LOW;
-    for (int8_t i = 0; i < realFrames; ++i) {
-        SPISendFrame(frame);
-    }
-    for (int8_t i = 0; i < noOpFrames; ++i) {
-        SPISendFrame(MAX7219_FRAME(NO_OP_REG, 0x00));
-    }
-    BSYWait();
-    *(config.ssel) = HIGH;
-}
-
 /*****************************************************************************
  * Public functions
  ****************************************************************************/
@@ -73,11 +60,23 @@ void MAX7219Configure(MAX7219Config cfg) {
 }
 
 void sendToAll(uint16_t frame) {
-    sendFrame(config.numOfMatrices, 0, frame);
+    BSYWait();
+    *(config.ssel) = LOW;
+    for (int8_t i = 0; i < config.numOfMatrices; ++i) { SPISendFrame(frame); }
+    BSYWait();
+    *(config.ssel) = HIGH;
+
 }
 
 void sendToOne(uint8_t offset, uint16_t frame) {
-    sendFrame(1, offset, frame);
+    BSYWait();
+    *(config.ssel) = LOW;
+    for (int8_t i = config.numOfMatrices - 1; i >= 0; --i) {
+        if (i == offset) { SPISendFrame(frame); }
+        else { SPISendFrame(MAX7219_FRAME(NO_OP_REG, 0x00)); }
+    }
+    BSYWait();
+    *(config.ssel) = HIGH;
 }
 
 void setColumnLEDs(uint8_t col, uint8_t data) {

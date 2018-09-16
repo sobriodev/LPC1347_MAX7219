@@ -45,8 +45,21 @@ int main(void) {
     LPC_SSP1->CPSR = 254;
     LPC_SSP1->CR1 |= 1 << 1;
 
-    MAX7219Config config = {LPC_SSP1, &(LPC_GPIO_PORT->B[1][19]), 8};
+    MAX7219Config config = {LPC_SSP1, &(LPC_GPIO_PORT->B[1][19]), 2};
     MAX7219Configure(config);
+
+    for (int i = 0; i < 8; ++i) {
+        sendToAll(MAX7219_FRAME(DIGIT_REG(i), 0x00));
+    }
+    sendToAll(MAX7219_FRAME(SHOUTDOWN_REG, 0x01));
+
+    int j;
+    for (int i = 0; i < 16; ++i) {
+        j = 0;
+        while (++j < 1000000);
+        uint8_t val = (i % 2 == 0) ? 0b10101010 : 0b01010101;
+        setColumnLEDs(i, val);
+    }
 
     while(1);
     return 0;
