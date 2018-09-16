@@ -53,6 +53,37 @@ void sendToAll(uint16_t frame);
  */
 void sendToOne(uint8_t offset, uint16_t frame);
 
-void setColumnLEDs(uint8_t col, uint8_t data);
+/**
+ * @brief Clear (toggle all LEDs off) desired matrix
+ * @param offset : Matrix offset
+ */
+void clearMatrix(uint8_t offset);
+
+/**
+ * @brief Set desired column LEDs
+ * @param col  : Column number (numbered from zero)
+ * @param data : LED states
+ */
+STATIC INLINE void setColumnLEDs(uint8_t col, uint8_t data) {
+    sendToOne(MATRIX_OFFSET(col), MAX7219_FRAME(DIGIT_REG(REAL_COLUMN(col)), data));
+}
+
+/**
+ * @brief Set desired matrix shutdown mode
+ * @param offset : Matrix offset
+ * @param mode   : True = shutdown enabled, false = shutdown disabled
+ */
+STATIC INLINE void setShutdownMode(uint8_t offset, bool mode) {
+    sendToOne(offset, MAX7219_FRAME(SHOUTDOWN_REG, !mode));
+}
+
+/**
+ * @brief Set desired matrix intensity
+ * @param offset    : Matrix offset
+ * @param intensity : Intensity from 0x00 (minimum) to 0x0F (maximum)
+ */
+STATIC INLINE void setIntensity(uint8_t offset, uint8_t intensity) {
+    sendToOne(offset, MAX7219_FRAME(INTENSITY_REG, intensity));
+}
 
 #endif /* MAX7219_H_ */

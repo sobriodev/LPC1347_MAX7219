@@ -48,18 +48,16 @@ int main(void) {
     MAX7219Config config = {LPC_SSP1, &(LPC_GPIO_PORT->B[1][19]), 2};
     MAX7219Configure(config);
 
-    for (int i = 0; i < 8; ++i) {
-        sendToAll(MAX7219_FRAME(DIGIT_REG(i), 0x00));
-    }
-    sendToAll(MAX7219_FRAME(SHOUTDOWN_REG, 0x01));
+    clearMatrix(0);
+    clearMatrix(1);
 
-    int j;
-    for (int i = 0; i < 16; ++i) {
-        j = 0;
-        while (++j < 1000000);
-        uint8_t val = (i % 2 == 0) ? 0b10101010 : 0b01010101;
-        setColumnLEDs(i, val);
-    }
+    setColumnLEDs(0, 0b11110000);
+    setColumnLEDs(9, 0b00001111);
+
+    setIntensity(1, 0x0F);
+
+    setShutdownMode(0, false);
+    setShutdownMode(1, false);
 
     while(1);
     return 0;
