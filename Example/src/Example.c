@@ -59,6 +59,16 @@ int main(void) {
     setShutdownMode(0, false);
     setShutdownMode(1, false);
 
+    int i = 0;
+    while (i++ < 10000000);
+
+    setTestMode(0, true);
+
+    i = 0;
+    while (i++ < 10000000);
+    setTestMode(1, true);
+    setTestMode(0, false);
+
     while(1);
     return 0;
 }

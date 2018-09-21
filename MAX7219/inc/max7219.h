@@ -78,6 +78,15 @@ STATIC INLINE void setShutdownMode(uint8_t offset, bool mode) {
 }
 
 /**
+ * @brief Set desired matrix test mode
+ * @param offset : Matrix offset
+ * @param mode   : True = test mode enabled, false = test mode disabled
+ */
+STATIC INLINE void setTestMode(uint8_t offset, bool mode) {
+    sendToOne(offset, MAX7219_FRAME(DISPLAY_TEST_REG, mode));
+}
+
+/**
  * @brief Set desired matrix intensity
  * @param offset    : Matrix offset
  * @param intensity : Intensity from 0x00 (minimum) to 0x0F (maximum)
