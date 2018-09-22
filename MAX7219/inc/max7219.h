@@ -9,6 +9,7 @@
 #define MAX7219_H_
 
 #include "board.h"
+#include "patterns.h"
 
 #define NO_OP_REG                   0x00
 #define DECODE_MODE_REG             0x09
@@ -24,11 +25,6 @@
 
 #define HIGH                        1
 #define LOW                         0
-
-#define DIGIT_1 0x00000080FF820000
-#define DIGIT_2 0x00008E91A1C18200
-#define DIGIT_3 0x0000768989814200
-#define DIGIT_4 0x0000FF2224283000
 
 typedef struct {
     LPC_SSP_T *ssp;         /* Pointer to used SSP. MUST be pre-configured */
@@ -61,6 +57,7 @@ void sendToOne(uint8_t offset, uint16_t frame);
 /**
  * @brief Clear (toggle all LEDs off) desired matrix
  * @param offset : Matrix offset
+ * @return Nothing
  */
 void clearMatrix(uint8_t offset);
 
@@ -68,6 +65,7 @@ void clearMatrix(uint8_t offset);
  * @brief Set desired matrix pattern
  * @param offset  : Matrix offset
  * @param pattern : Matrix pattern
+ * @return Nothing
  * @note The LSB refers to the column on the leftmost
  */
 void setPattern(uint8_t offset, uint64_t pattern);
@@ -76,6 +74,7 @@ void setPattern(uint8_t offset, uint64_t pattern);
  * @brief Set desired column LEDs
  * @param col  : Column number (numbered from zero)
  * @param data : LED states
+ * @return Nothing
  */
 STATIC INLINE void setColumnLEDs(uint8_t col, uint8_t data) {
     sendToOne(MATRIX_OFFSET(col), MAX7219_FRAME(DIGIT_REG(REAL_COLUMN(col)), data));
@@ -94,6 +93,7 @@ STATIC INLINE void setShutdownMode(uint8_t offset, bool mode) {
  * @brief Set desired matrix test mode
  * @param offset : Matrix offset
  * @param mode   : True = test mode enabled, false = test mode disabled
+ * @return Nothing
  */
 STATIC INLINE void setTestMode(uint8_t offset, bool mode) {
     sendToOne(offset, MAX7219_FRAME(DISPLAY_TEST_REG, mode));
@@ -103,6 +103,7 @@ STATIC INLINE void setTestMode(uint8_t offset, bool mode) {
  * @brief Set desired matrix intensity
  * @param offset    : Matrix offset
  * @param intensity : Intensity from 0x00 (minimum) to 0x0F (maximum)
+ * @return Nothing
  */
 STATIC INLINE void setIntensity(uint8_t offset, uint8_t intensity) {
     sendToOne(offset, MAX7219_FRAME(INTENSITY_REG, intensity));
