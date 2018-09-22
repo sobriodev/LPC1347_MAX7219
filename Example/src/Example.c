@@ -51,8 +51,8 @@ int main(void) {
     clearMatrix(0);
     clearMatrix(1);
 
-    setPattern(0, DIGIT_1);
-    setPattern(1, DIGIT_2);
+    setPattern(0, DIGIT_3);
+    setPattern(1, DIGIT_4);
 
     setShutdownMode(0, false);
     setShutdownMode(1, false);
@@ -60,9 +60,8 @@ int main(void) {
     int i = 0;
     while (i++ < 10000000);
 
-    setPattern(0, DIGIT_3);
-    setPattern(1, DIGIT_4);
-
+    setPattern(0, DIGIT_1);
+    setPattern(1, DIGIT_2);
 
     while(1);
     return 0;

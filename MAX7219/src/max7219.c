@@ -93,8 +93,7 @@ void clearMatrix(uint8_t offset) {
 
 void setPattern(uint8_t offset, uint64_t pattern) {
     for (int8_t i = 0; i < 8; ++i) {
-        uint8_t column = (uint8_t) i + ((offset * 8) & 0xFE); /* Calculate column offset and clear 0 bit to subtract one if needed
-                                                         (jumping to the N (> 0) matrix requires adding N*8 - 1 to the column offset) */
+        uint8_t column = (uint8_t) i + (offset * 8); /* Calculate column offset */
         uint8_t columnLEDs = (uint8_t) (pattern >> (i * 8)) & 0xFF; /* Calculate column LEDs from 64 bit value */
         setColumnLEDs(column, columnLEDs);
     }
