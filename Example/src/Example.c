@@ -51,10 +51,8 @@ int main(void) {
     clearMatrix(0);
     clearMatrix(1);
 
-    setColumnLEDs(0, 0b11110000);
-    setColumnLEDs(9, 0b00001111);
-
-    setIntensity(1, 0x0F);
+    setPattern(0, DIGIT_1);
+    setPattern(1, DIGIT_2);
 
     setShutdownMode(0, false);
     setShutdownMode(1, false);
@@ -62,12 +60,9 @@ int main(void) {
     int i = 0;
     while (i++ < 10000000);
 
-    setTestMode(0, true);
+    setPattern(0, DIGIT_3);
+    setPattern(1, DIGIT_4);
 
-    i = 0;
-    while (i++ < 10000000);
-    setTestMode(1, true);
-    setTestMode(0, false);
 
     while(1);
     return 0;
