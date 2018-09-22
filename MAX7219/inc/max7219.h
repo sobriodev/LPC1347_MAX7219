@@ -71,6 +71,13 @@ void clearMatrix(uint8_t offset);
 void setPattern(uint8_t offset, uint64_t pattern);
 
 /**
+ * @brief Set patterns for all matrices
+ * @param patterns : Pointer to the patterns data. The data length must be adequate to the number of matrices used
+ * @return Nothing
+ */
+void setPatterns(const uint64_t *patterns);
+
+/**
  * @brief Set desired column LEDs
  * @param col  : Column number (numbered from zero)
  * @param data : LED states

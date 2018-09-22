@@ -98,3 +98,16 @@ void setPattern(uint8_t offset, uint64_t pattern) {
         setColumnLEDs(column, columnLEDs);
     }
 }
+
+void setPatterns(const uint64_t *patterns) {
+    for (int8_t i = 0; i < 8; ++i) {
+        BSYWait();
+        *(config.ssel) = LOW;
+        for (int8_t j = config.numOfMatrices - 1; j >= 0; --j) {
+            uint8_t frameData = (patterns[j] >> (i * 8)) & 0xFF;
+            SPISendFrame(MAX7219_FRAME(DIGIT_REG(i), frameData));
+        }
+        BSYWait();
+        *(config.ssel) = HIGH;
+    }
+}
