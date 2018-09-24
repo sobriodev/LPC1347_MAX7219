@@ -71,11 +71,31 @@ void clearMatrix(uint8_t offset);
 void setPattern(uint8_t offset, uint64_t pattern);
 
 /**
+ * #brief Set animation data and length
+ * @param data   : Pointer to animation data
+ * @param length : Length of data in bytes (number of columns)
+ * @return True if animation settings are correct, false otherwise
+ */
+bool setAnimation(const uint8_t *data, size_t animationLength);
+
+/**
+ * @brief Display next animation frame
+ * @return true if animation is not finished, false otherwise
+ */
+bool nextFrame(void);
+
+/**
  * @brief Set patterns for all matrices
  * @param patterns : Pointer to the patterns data. The data length must be adequate to the number of matrices used
  * @return Nothing
  */
 void setPatterns(const uint64_t *patterns);
+
+/**
+ * @brief Destroy all settings and free used memory
+ * @return Nothing
+ */
+void MAX7219Destroy(void);
 
 /**
  * @brief Set desired column LEDs

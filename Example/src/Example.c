@@ -54,12 +54,38 @@ int main(void) {
     setShutdownMode(0, false);
     setShutdownMode(1, false);
 
-    uint64_t data[] = {DIGIT_1, DIGIT_4, DIGIT_2, DIGIT_3};
-    setPatterns(data);
+    const uint64_t data[] = {DIGIT_1, DIGIT_2, DIGIT_3};
 
     int i = 0;
-    while (i++ < 10000000);
-    setPatterns(data + 2);
+    if (setAnimation((uint8_t *) data, 24)) {
+        LPC_GPIO_PORT->B[0][7] = true;
+        while (nextFrame()) {
+            i = 0;
+            while (++i < 300000);
+        }
+    }
+
+    i = 0;
+    while (++i < 1000000);
+
+    clearMatrix(0);
+    clearMatrix(1);
+
+    i = 0;
+    while (++i < 1000000);
+
+    const uint64_t data2[] = {DIGIT_4, DIGIT_3, DIGIT_2, DIGIT_1};
+
+    i = 0;
+    if (setAnimation((uint8_t *) data2, 32)) {
+        LPC_GPIO_PORT->B[0][7] = true;
+        while (nextFrame()) {
+            i = 0;
+            while (++i < 300000);
+        }
+    }
+
+    MAX7219Destroy();
 
     while(1);
     return 0;
